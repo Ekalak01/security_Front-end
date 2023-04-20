@@ -1,0 +1,41 @@
+
+/* ใส่กรอบ */
+.custom-border {
+    border: 2px solid #1e0707;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: white;
+    width: 100%;
+    max-width: 500px; /* ปรับค่าตามความต้องการ */
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
+  
+  /* ตัวอักษรสีน้ำเงิน */
+  .text-blue {
+    color: #03040b;
+  }
+  
+  /* ปุ่มสลับล็อค */
+  .switch-label {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #666;
+  }
+  
+  .switch-locked {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #f00;
+  }
+  
+  .switch-unlocked {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: rgb(37, 175, 30);
+  }
+  .h1{
+    font-size: 100%;
+    font-weight: bold;
+  }
+   
