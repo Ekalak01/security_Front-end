@@ -6,6 +6,8 @@ import './Custom.css';
 import './App.css';
 import { pink } from '@mui/material/colors';
 import { alpha, styled } from '@mui/material/styles';
+import Swal from 'sweetalert2';
+
 
 function App() {
   const [status, setStatus] = useState(null);
@@ -21,21 +23,57 @@ function App() {
       backgroundColor: pink[600],
     },
   }));
+  
   useEffect(() => {
     fetchStatus();
   }, []);
 
   const fetchStatus = async () => {
-    const response = await fetch('http://localhost:5000/api/status');
-    const data = await response.json();
-    setStatus(data);
+    try {
+      const response = await fetch('http://localhost:5000/api/status');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setStatus(data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'เกิดข้อผิดพลาด',
+        text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ กรุณาลองใหม่ภายหลัง',
+      });
+    }
   };
+  
 
   const toggleLock = async () => {
-    const response = await fetch('http://localhost:5000/api/toggle', { method: 'POST' });
-    const data = await response.json();
-    setStatus(data);
+    try {
+      const response = await fetch('http://localhost:5000/api/toggle', { method: 'POST' });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+  
+      if (status && !status.doorOpen) {
+        setStatus(data);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'ไม่สามารถล็อคประตูได้เนื่องจากประตูเปิดอยู่',
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'เกิดข้อผิดพลาด',
+        text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ กรุณาลองใหม่ภายหลัง',
+      });
+    }
   };
+  
 
   return (
     <Container className="App ">
