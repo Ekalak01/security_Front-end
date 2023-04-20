@@ -3,6 +3,7 @@ import { Container, Row, Col, Form } from 'react-bootstrap';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import './Custom.css';
+import './App.css';
 import { pink } from '@mui/material/colors';
 import { alpha, styled } from '@mui/material/styles';
 
@@ -37,8 +38,8 @@ function App() {
   };
 
   return (
-    <Container className="App">
-      <Row className="align-items-center">
+    <Container className="App ">
+      <Row className="align-items-center ">
         <Col className="custom-border">
           <h1 className="text-blue">Smart Home Security</h1>
           <p>Door lock status: <strong>{status && (status.locked ? 'Locked' : 'Unlocked')}</strong></p>
@@ -54,7 +55,7 @@ function App() {
                   checked={status && status.locked}
                   onChange={toggleLock}
                   color="primary"
-                  inputProps={{ 'aria-label': 'Toggle Lock' } }
+                  inputProps={{ 'aria-label': 'Toggle Lock' }}
                   classes={{
                     track: `${switchColor}`,
                     switchBase: `${switchColor}`,
@@ -68,6 +69,6 @@ function App() {
       </Row>
     </Container>
   );
-}
+}  
 
 export default App;
