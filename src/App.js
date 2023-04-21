@@ -7,7 +7,7 @@ import './App.css';
 import { pink } from '@mui/material/colors';
 import { alpha, styled } from '@mui/material/styles';
 import Swal from 'sweetalert2';
-
+import mqtt from 'mqtt';
 
 function App() {
   const [status, setStatus] = useState(null);
@@ -26,8 +26,28 @@ function App() {
   
   useEffect(() => {
     fetchStatus();
+  
+    // create MQTT client and subscribe to topic "update"
+    const client = mqtt.connect('ws://test.mosquitto.org:8080/mqtt');
+    client.on('connect', function () {
+      console.log('Connected to MQTT Broker!');
+      client.subscribe('update');
+    });
+    client.on('message', function (topic, message) {
+      const data = JSON.parse(message.toString());
+      setStatus(data);
+    });
+  
+    return () => {
+      client.end(); // disconnect MQTT client on unmount
+    };
   }, []);
 
+  const onMessage = (message) => {
+    const data = JSON.parse(message.payloadString);
+    setStatus(data);
+  };
+  
   const fetchStatus = async () => {
     try {
       const response = await fetch('http://localhost:5000/api/status');
