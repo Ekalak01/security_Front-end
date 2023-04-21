@@ -86,16 +86,6 @@ function App() {
   
       if (status && !status.doorOpen) {
         setStatus(data);
-        const client = mqtt.connect('ws://test.mosquitto.org:8080/mqtt');
-        client.on('connect', function () {
-          console.log('Connected to MQTT Broker!');
-          const lock_status = data.locked ? 'LOCK' : 'UNLOCK';
-          client.publish('456', JSON.stringify({ lock: lock_status }));
-        });
-        client.on('error', function (error) {
-          console.error('Error:', error);
-        });
-        client.end();
       } else {
         Swal.fire({
           icon: 'error',
@@ -112,7 +102,6 @@ function App() {
       });
     }
   };
-  
   
 
   return (
