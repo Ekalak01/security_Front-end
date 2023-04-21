@@ -23,7 +23,20 @@ function App() {
       backgroundColor: pink[600],
     },
   }));
-  
+  const handleMqttMessage = (message) => {
+    try {
+      const data = JSON.parse(message.toString());
+      console.log(data)
+      if ('people' in data) {
+        setStatus(data);
+      }
+      if ('doorOpen' in data) {
+        setStatus(data);
+      }
+    } catch (error) {
+      console.error('Error parsing MQTT message:', error);
+    }
+  };
   useEffect(() => {
     fetchStatus();
   
@@ -34,8 +47,8 @@ function App() {
       client.subscribe('update');
     });
     client.on('message', function (topic, message) {
-      const data = JSON.parse(message.toString());
-      setStatus(data);
+      // const data = JSON.parse(message.toString()); // parse JSON string to object
+      handleMqttMessage(message);
     });
   
     return () => {
@@ -43,10 +56,6 @@ function App() {
     };
   }, []);
 
-  const onMessage = (message) => {
-    const data = JSON.parse(message.payloadString);
-    setStatus(data);
-  };
   
   const fetchStatus = async () => {
     try {
@@ -77,6 +86,16 @@ function App() {
   
       if (status && !status.doorOpen) {
         setStatus(data);
+        const client = mqtt.connect('ws://test.mosquitto.org:8080/mqtt');
+        client.on('connect', function () {
+          console.log('Connected to MQTT Broker!');
+          const lock_status = data.locked ? 'LOCK' : 'UNLOCK';
+          client.publish('456', JSON.stringify({ lock: lock_status }));
+        });
+        client.on('error', function (error) {
+          console.error('Error:', error);
+        });
+        client.end();
       } else {
         Swal.fire({
           icon: 'error',
@@ -93,6 +112,7 @@ function App() {
       });
     }
   };
+  
   
 
   return (
